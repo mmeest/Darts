@@ -133,7 +133,7 @@
                               selectList.appendChild(option);
                           }
                         }else{
-                          td.appendChild(document.createTextNode('___'));
+                          td.appendChild(document.createTextNode('__'));
                           td.id = tableNumber.toString() + '' + j.toString() + '' + i.toString();
 
                           td.addEventListener('click', function(evt){
@@ -164,7 +164,7 @@
               /* console.log(row); */
 
               if(row < 6){
-                let currentThrow = prompt("Please enter your name:", "Sisesta number");
+                let currentThrow = prompt("Sisesta number:", "");
                 document.getElementById(cellId).innerHTML = currentThrow;
               }
 
