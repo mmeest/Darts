@@ -1,4 +1,16 @@
 <!DOCTYPE html>
+  <!-- 
+    Slider mängijate arvu valimiseks                  +
+    Tabeli genereerimine vastavalt mängijate arvule   +
+    Tabeli päises mängijate nimede valik              +
+    Tabeli väljadele ID omandamine                    +
+    Tabeli väljadel klikkides numbrite sisestamine    +
+    Tabeli alumisel väljal veergude summa             +
+    Suurima punktisummaga lahter rohelise taustaga    +
+    Aktiivne tabeli lahter kollase taustaga           +
+    Viimasele reale ei saa sisestada numbreid         +
+    'Enter' klahvi kasutamine                         -
+  -->
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -12,12 +24,14 @@
       }
       #fix{
         text-align: center;
-        color:rgb(56, 185, 155);
+        color:rgb(24, 66, 57);
+        font-weight: bold;
+        font-size: 3vh;
         width: 80%;
         left: 10%;
         position: fixed;
         z-index: 100;
-        background-color: rgb(28, 23, 71);
+        background-color: rgb(138, 179, 63);
         border-radius: 20px;
         border-style: solid;
         border-color: rgb(44, 42, 42);
@@ -54,12 +68,12 @@
         }
         table{          
           border-collapse: separate;
-          border-spacing: 18px;
+          border-spacing: 15px;          
         }
         tr:last-child>td{
           background-color: rgb(234, 250, 192);
         }
-        tr:nth-child(1)>td{
+        tr:nth-child(1)>td>input{
           border-style : hidden!important;
           border-color: yellow;
           background-color: rgb(105, 201, 178);
@@ -76,15 +90,44 @@
           height: 40px;
           border-radius: 50%;
         }
+
+        input:active{
+            background-color: yellow;
+        }
+        input:focus{
+            background-color: yellow;
+        }
+        input{
+            border: none !important;
+            background-color: rgb(211, 250, 233);
+            font-size: 6vh;
+            text-align: center;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
     </style>
 </head>
 <body>
   <br>
     <div id="fix"><br>
       <input type="range" min="1" max="8" value="3" class="slider" id="myRange" style="width: 100%;">
+      <p><img border="0" src="rosen.png" width="281" height="115" align="right"></p>
+      <p><img border="0" src="rosen.png" width="281" height="115" align="left"></p>
       <p>Mängijate arv: <span id="demo"></span></p>
       <button type="button" onclick="myFunction()">OK</button>
-    </div><br><br><br><br><br><br><br><br>
+    </div><br><br><br><br><br><br><br><br><br><br><br><br>
 
     <div id="table"></div>
 
@@ -110,8 +153,6 @@
             tbl  = document.createElement('table');
             tbl.style.width  = '100%';
 
-            /* var tr = tbl.insertRow(); */
-
             for(var i = 0; i <= 6; i++){
                 var tr = tbl.insertRow();
 
@@ -119,13 +160,12 @@
                         var td = tr.insertCell();
                         if(i == 0){
                           
-                          /* td.appendChild(document.createTextNode('Header')); */
-                          //Create and append select list
+                          //Valiku loomine ja lisamine
                           var selectList = document.createElement("select");
                           selectList.id = "mySelect";
                           td.appendChild(selectList);
 
-                          //Create and append the options
+                          //Nimede lisamine valikusse
                           for (var k = 0; k < names.length; k++) {
                               var option = document.createElement("option");
                               option.value = names[k];
@@ -133,11 +173,31 @@
                               selectList.appendChild(option);
                           }
                         }else{
-                          td.appendChild(document.createTextNode('__'));
-                          td.id = tableNumber.toString() + '' + j.toString() + '' + i.toString();
+                            var inputNumber = document.createElement("input");
+                            inputNumber.type = "number";
+                            inputNumber.pattern = "[0-9]+";
+                            inputNumber.oninput = oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');";
+                            inputNumber.id = tableNumber.toString() + '' + j.toString() + '' + i.toString();
+                            inputNumber.onclick = "myPopup(id.this)";
+                            td.appendChild(inputNumber);
 
-                          td.addEventListener('click', function(evt){
-                            myPopup(this.id);
+                            if(i == 6){
+                              inputNumber.disabled="disabled";
+                            }
+
+                            inputNumber.addEventListener('click', function(evt){
+                              console.log("hello: " + inputNumber.id);
+
+                              // Enter klahvi kasutus
+                              var input = document.getElementById(this.id);
+                              input.addEventListener("keyup", function(event) {
+                                if (event.keyCode === 13) {
+                                event.preventDefault();
+                                console.log("agergerge");
+                                myPopup(this.id);
+                                }
+                              });                          
+
                           });
                         }
                         td.style.border = '1px solid black';
@@ -145,13 +205,16 @@
             }
             body.appendChild(tbl);
 
+                            
+
+
             linebreak = document.createElement("br");
             body.appendChild(linebreak);
 
             function myPopup(cellId){
-
               /* console.log('Cell number is: ' + cellId); */
               let tableNumber = cellId.substring(0, 3);
+              console.log(tableNumber);
               /* console.log('Table number is: ' + tableNumber); */
               let columnNumber = cellId.substring(3, 4);
               /* console.log('Column number is: ' + columnNumber); */
@@ -163,37 +226,39 @@
               let row = parseInt(rowNumber);
               /* console.log(row); */
 
+              // 2 - 5 reale
               if(row < 6){
-                let currentThrow = prompt("Sisesta number:", "");
-                document.getElementById(cellId).innerHTML = currentThrow;
+                let currentThrow = document.getElementById(cellId).value;
+                console.log("Current throw is: " + currentThrow);
               }
 
               let sumValue = 0;
 
               for(var n = 1; n <= 5; n++){
-                let currentValue = document.getElementById(tableNumber + '' + columnNumber + '' + n).innerHTML;
-                console.log(currentValue);
-                if(!(isNaN(currentValue))){
-                  console.log(parseInt(currentValue));
-                  console.log(currentValue);
-                  sumValue += parseInt(currentValue);
-                  console.log(sumValue);
-                  console.log(sumValue * 20);
-                }
-              }
-              document.getElementById(tableNumber + '' + columnNumber + '' + 6).innerHTML = sumValue.toString();
+                let currentValue = parseInt(document.getElementById(tableNumber + '' + columnNumber + '' + n).value);
 
+                if(!(isNaN(currentValue))){
+                  sumValue += currentValue;
+                }
+                console.log("sum is " + sumValue);
+              }
+              // Veeru punktisumma kuvatakse alumisel väljal
+              document.getElementById(tableNumber + '' + columnNumber + '' + 6).value = sumValue.toString();
+
+              // Parima punktisumma esiletõstmine
               let o = 0;
-              for(var x = 0; x < players; x++){
+              for(var x = 0; x < players; x++){ 
                 document.getElementById(tableNumber + '' + x + '' + 6).style.backgroundColor = 'rgb(234, 250, 192)';
 
-                if(parseInt(document.getElementById(tableNumber + '' + x + '' + 6).innerHTML) > o){
-                  o = parseInt(document.getElementById(tableNumber + '' + x + '' + 6).innerHTML)
+                // Leitakse viimaselt realt suurim summa
+                if(parseInt(document.getElementById(tableNumber + '' + x + '' + 6).value) > o){
+                  o = parseInt(document.getElementById(tableNumber + '' + x + '' + 6).value)
                 }
               }
 
+              // Suurima summaga välja taustavärv on roheline
               for(var x = 0; x < players; x++){
-                if(parseInt(document.getElementById(tableNumber + '' + x + '' + 6).innerHTML) == o){
+                if(parseInt(document.getElementById(tableNumber + '' + x + '' + 6).value) == o){
                   document.getElementById(tableNumber + '' + x + '' + 6).style.backgroundColor = 'lightgreen';
                 }                
               }
