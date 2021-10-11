@@ -140,7 +140,7 @@
         }
 
         var players = 0;
-        var names = ['', 'Ago', 'Jane', 'Marii', 'Martin', 'Margus', 'Riina'];
+        var names = ['', 'Ergo', 'Erki', 'Kermo', 'Martin', 'Pille', 'Rauni', 'Rauno', 'Sven', 'Vitali'];
         function myFunction(){
             tableNumber += 1;
 
@@ -171,6 +171,9 @@
                               selectList.appendChild(option);
                           }
                         }else{
+
+                          if(i < 6){
+
                             var inputNumber = document.createElement("input");
                             inputNumber.type = "number";
                             inputNumber.pattern = "[0-9]+";
@@ -194,9 +197,12 @@
                                 console.log("agergerge");
                                 myPopup(this.id);
                                 }
-                              });                          
-
+                              });      
                           });
+
+                          }else{
+                            td.id = tableNumber.toString() + '' + j.toString() + '' + i.toString();
+                          }
                         }
                         td.style.border = '1px solid black';
                 }
@@ -241,7 +247,7 @@
                 console.log("sum is " + sumValue);
               }
               // Veeru punktisumma kuvatakse alumisel väljal
-              document.getElementById(tableNumber + '' + columnNumber + '' + 6).value = sumValue.toString();
+              document.getElementById(tableNumber + '' + columnNumber + '' + 6).innerHTML = sumValue.toString();
 
               // Parima punktisumma esiletõstmine
               let o = 0;
@@ -249,14 +255,14 @@
                 document.getElementById(tableNumber + '' + x + '' + 6).style.backgroundColor = 'rgb(234, 250, 192)';
 
                 // Leitakse viimaselt realt suurim summa
-                if(parseInt(document.getElementById(tableNumber + '' + x + '' + 6).value) > o){
-                  o = parseInt(document.getElementById(tableNumber + '' + x + '' + 6).value)
+                if(parseInt(document.getElementById(tableNumber + '' + x + '' + 6).innerHTML) > o){
+                  o = parseInt(document.getElementById(tableNumber + '' + x + '' + 6).innerHTML)
                 }
               }
 
               // Suurima summaga välja taustavärv on roheline
               for(var x = 0; x < players; x++){
-                if(parseInt(document.getElementById(tableNumber + '' + x + '' + 6).value) == o){
+                if(parseInt(document.getElementById(tableNumber + '' + x + '' + 6).innerHTML) == o){
                   document.getElementById(tableNumber + '' + x + '' + 6).style.backgroundColor = 'lightgreen';
                 }                
               }
