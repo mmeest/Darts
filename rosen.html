@@ -91,12 +91,12 @@
           border-radius: 50%;
         }
 
-        input:active{
+        /* input:active{
             background-color: yellow;
         }
         input:focus{
             background-color: yellow;
-        }
+        } */
         input{
             border: none !important;
             background-color: rgb(211, 250, 233);
@@ -187,10 +187,16 @@
                             }
 
                             inputNumber.addEventListener('click', function(evt){
-                              console.log("hello: " + inputNumber.id);
+                              /* console.log("hello: " + inputNumber.id); */
 
                               // Enter klahvi kasutus
                               var input = document.getElementById(this.id);
+
+                              // Värvib klikitud välja tausta kollaseks
+                              document.getElementById(this.id).style.backgroundColor = 'yellow';
+
+                              /* $("#myForm").submit(myPopup(this.id)); */
+
                               input.addEventListener("keyup", function(event) {
                                 if (event.keyCode === 13) {
                                 event.preventDefault();
@@ -207,10 +213,7 @@
                         td.style.border = '1px solid black';
                 }
             }
-            body.appendChild(tbl);
-
-                            
-
+            body.appendChild(tbl);        
 
             linebreak = document.createElement("br");
             body.appendChild(linebreak);
@@ -233,18 +236,19 @@
               // 2 - 5 reale
               if(row < 6){
                 let currentThrow = document.getElementById(cellId).value;
-                console.log("Current throw is: " + currentThrow);
+                /* console.log("Current throw is: " + currentThrow); */
               }
 
               let sumValue = 0;
 
               for(var n = 1; n <= 5; n++){
                 let currentValue = parseInt(document.getElementById(tableNumber + '' + columnNumber + '' + n).value);
+                document.getElementById(tableNumber + '' + columnNumber + '' + n).style.backgroundColor = "rgb(211, 250, 245)";
 
                 if(!(isNaN(currentValue))){
                   sumValue += currentValue;
                 }
-                console.log("sum is " + sumValue);
+                /* console.log("sum is " + sumValue); */
               }
               // Veeru punktisumma kuvatakse alumisel väljal
               document.getElementById(tableNumber + '' + columnNumber + '' + 6).innerHTML = sumValue.toString();
