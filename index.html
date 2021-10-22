@@ -1,16 +1,4 @@
 <!DOCTYPE html>
-  <!-- 
-    Slider mängijate arvu valimiseks                  +
-    Tabeli genereerimine vastavalt mängijate arvule   +
-    Tabeli päises mängijate nimede valik              +
-    Tabeli väljadele ID omandamine                    +
-    Tabeli väljadel klikkides numbrite sisestamine    +
-    Tabeli alumisel väljal veergude summa             +
-    Suurima punktisummaga lahter rohelise taustaga    +
-    Aktiivne tabeli lahter kollase taustaga           +
-    Viimasele reale ei saa sisestada numbreid         +
-    'Enter' klahvi kasutamine                         -
-  -->
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -20,22 +8,25 @@
     <style>
       body{
         background-color: rgb(105, 201, 178);
+        background-image: url('darts.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
         font-family: Arial, Helvetica, sans-serif;
       }
       #fix{
         text-align: center;
-        color:rgb(24, 66, 57);
-        font-weight: bold;
-        font-size: 3vh;
+        color:rgb(7, 39, 31);
         width: 80%;
         left: 10%;
         position: fixed;
         z-index: 100;
-        background-color: rgb(138, 179, 63);
+        /* background-color: rgb(28, 23, 71); */
         border-radius: 20px;
         border-style: solid;
         border-color: rgb(44, 42, 42);
         border-width: 4px;
+        background: rgb(5,27,42);
+background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, rgba(76,132,219,1) 65%, rgba(0,0,0,1) 100%);
       }
         .slider {
           -webkit-appearance: none;
@@ -62,18 +53,19 @@
           text-align: center;
           border-radius: 12px;
           margin: 6px;
-          font-size: 6vh;
+         /*  font-size: x-large; */
+          font-size: 8vh;
           padding: 5px;
           background-color: rgb(211, 250, 245);
         }
         table{          
           border-collapse: separate;
-          border-spacing: 15px;          
+          border-spacing: 18px;          
         }
         tr:last-child>td{
           background-color: rgb(234, 250, 192);
         }
-        tr:nth-child(1)>td>input{
+        tr:nth-child(1)>td{
           border-style : hidden!important;
           border-color: yellow;
           background-color: rgb(105, 201, 178);
@@ -89,13 +81,6 @@
           width: 40px;
           height: 40px;
           border-radius: 50%;
-        }
-
-        input:active{
-            background-color: yellow;
-        }
-        input:focus{
-            background-color: yellow;
         }
         input{
             border: none !important;
@@ -117,6 +102,17 @@
         input[type=number] {
           -moz-appearance: textfield;
         }
+        #new{
+          display: flex;
+        }
+        #new>input{
+          border-color: blue;
+          margin: 15px;
+          border-radius: 6px;
+        }
+        input{
+          box-shadow: 5px 5px 3px #6e6a42;
+        }
     </style>
 </head>
 <body>
@@ -125,9 +121,12 @@
       <input type="range" min="1" max="8" value="3" class="slider" id="myRange" style="width: 100%;">
       <p>Mängijate arv: <span id="demo"></span></p>
       <button type="button" onclick="myFunction()">OK</button>
-    </div><br><br><br><br><br><br><br><br><br><br><br><br>
+    </div><br><br><br><br><br><br><br><br>
 
-    <div id="table"></div>
+    <div id="new">
+      <input type="text" placeholder="lisa nimi" id="newName">
+      <input type="button" value="Lisa mängija" onclick="newPlayer()">
+    </div>
 
     <script>
         var tableNumber = 100;
@@ -141,6 +140,16 @@
 
         var players = 0;
         var names = ['', 'Ago', 'Jane', 'Marii', 'Martin', 'Margus', 'Riina'];
+
+        function newPlayer(){
+          var playerName = document.getElementById("newName").value;
+          console.log(playerName);
+          names.push(playerName);
+          console.log(names);
+          playerName = "";
+          document.getElementById("newName").value = "";
+        }
+
         function myFunction(){
             tableNumber += 1;
 
@@ -151,6 +160,8 @@
             tbl  = document.createElement('table');
             tbl.style.width  = '100%';
 
+            document.getElementById('new').style.display = "none";
+
             for(var i = 0; i <= 6; i++){
                 var tr = tbl.insertRow();
 
@@ -158,12 +169,13 @@
                         var td = tr.insertCell();
                         if(i == 0){
                           
-                          //Valiku loomine ja lisamine
+                          /* td.appendChild(document.createTextNode('Header')); */
+                          //Create and append select list
                           var selectList = document.createElement("select");
                           selectList.id = "mySelect";
                           td.appendChild(selectList);
 
-                          //Nimede lisamine valikusse
+                          //Create and append the options
                           for (var k = 0; k < names.length; k++) {
                               var option = document.createElement("option");
                               option.value = names[k];
@@ -171,54 +183,25 @@
                               selectList.appendChild(option);
                           }
                         }else{
+                          td.appendChild(document.createTextNode('___'));
+                          td.id = tableNumber.toString() + '' + j.toString() + '' + i.toString();
 
-                          if(i < 6){
-
-                            var inputNumber = document.createElement("input");
-                            inputNumber.type = "number";
-                            inputNumber.pattern = "[0-9]+";
-                            inputNumber.oninput = oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');";
-                            inputNumber.id = tableNumber.toString() + '' + j.toString() + '' + i.toString();
-                            inputNumber.onclick = "myPopup(id.this)";
-                            td.appendChild(inputNumber);
-
-                            if(i == 6){
-                              inputNumber.disabled="disabled";
-                            }
-
-                            inputNumber.addEventListener('click', function(evt){
-                              console.log("hello: " + inputNumber.id);
-
-                              // Enter klahvi kasutus
-                              var input = document.getElementById(this.id);
-                              input.addEventListener("keyup", function(event) {
-                                if (event.keyCode === 13) {
-                                event.preventDefault();
-                                console.log("agergerge");
-                                myPopup(this.id);
-                                }
-                              });      
+                          td.addEventListener('click', function(evt){
+                            myPopup(this.id);
                           });
-
-                          }else{
-                            td.id = tableNumber.toString() + '' + j.toString() + '' + i.toString();
-                          }
                         }
                         td.style.border = '1px solid black';
                 }
             }
             body.appendChild(tbl);
 
-                            
-
-
             linebreak = document.createElement("br");
             body.appendChild(linebreak);
 
             function myPopup(cellId){
+
               /* console.log('Cell number is: ' + cellId); */
               let tableNumber = cellId.substring(0, 3);
-              console.log(tableNumber);
               /* console.log('Table number is: ' + tableNumber); */
               let columnNumber = cellId.substring(3, 4);
               /* console.log('Column number is: ' + columnNumber); */
@@ -230,37 +213,38 @@
               let row = parseInt(rowNumber);
               /* console.log(row); */
 
-              // 2 - 5 reale
               if(row < 6){
-                let currentThrow = document.getElementById(cellId).value;
-                console.log("Current throw is: " + currentThrow);
+                /* const aNumber = Number(window.prompt("Type a number", "")); */
+                /* let currentThrow = Number(window.prompt("Sisesta number:". "")); */
+                /* let currentThrow = parseInt(prompt("Sisesta number:", "0"), 10); */
+                let currentThrow = prompt("Please enter your name:", "Sisesta number", pattern="[0-9]");
+                document.getElementById(cellId).innerHTML = currentThrow;
               }
 
               let sumValue = 0;
 
               for(var n = 1; n <= 5; n++){
-                let currentValue = parseInt(document.getElementById(tableNumber + '' + columnNumber + '' + n).value);
-
+                let currentValue = document.getElementById(tableNumber + '' + columnNumber + '' + n).innerHTML;
+                console.log(currentValue);
                 if(!(isNaN(currentValue))){
-                  sumValue += currentValue;
+                  console.log(parseInt(currentValue));
+                  console.log(currentValue);
+                  sumValue += parseInt(currentValue);
+                  console.log(sumValue);
+                  console.log(sumValue * 20);
                 }
-                console.log("sum is " + sumValue);
               }
-              // Veeru punktisumma kuvatakse alumisel väljal
               document.getElementById(tableNumber + '' + columnNumber + '' + 6).innerHTML = sumValue.toString();
 
-              // Parima punktisumma esiletõstmine
               let o = 0;
-              for(var x = 0; x < players; x++){ 
+              for(var x = 0; x < players; x++){
                 document.getElementById(tableNumber + '' + x + '' + 6).style.backgroundColor = 'rgb(234, 250, 192)';
 
-                // Leitakse viimaselt realt suurim summa
                 if(parseInt(document.getElementById(tableNumber + '' + x + '' + 6).innerHTML) > o){
                   o = parseInt(document.getElementById(tableNumber + '' + x + '' + 6).innerHTML)
                 }
               }
 
-              // Suurima summaga välja taustavärv on roheline
               for(var x = 0; x < players; x++){
                 if(parseInt(document.getElementById(tableNumber + '' + x + '' + 6).innerHTML) == o){
                   document.getElementById(tableNumber + '' + x + '' + 6).style.backgroundColor = 'lightgreen';

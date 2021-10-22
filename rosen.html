@@ -9,7 +9,8 @@
     Suurima punktisummaga lahter rohelise taustaga    +
     Aktiivne tabeli lahter kollase taustaga           +
     Viimasele reale ei saa sisestada numbreid         +
-    'Enter' klahvi kasutamine                         -
+    'Enter' klahvi kasutamine                         +
+    Uue kasutaja lisamine                             +
   -->
 <html lang="en">
   <head>
@@ -20,6 +21,9 @@
     <style>
       body{
         background-color: rgb(105, 201, 178);
+        background-image: url('darts.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
         font-family: Arial, Helvetica, sans-serif;
       }
       #fix{
@@ -31,11 +35,13 @@
         left: 10%;
         position: fixed;
         z-index: 100;
-        background-color: rgb(138, 179, 63);
+        /* background-color: rgb(138, 179, 63); */
         border-radius: 20px;
         border-style: solid;
         border-color: rgb(44, 42, 42);
         border-width: 4px;
+        background: rgb(5,27,42);
+background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, rgba(76,132,219,1) 65%, rgba(0,0,0,1) 100%);
       }
         .slider {
           -webkit-appearance: none;
@@ -90,13 +96,6 @@
           height: 40px;
           border-radius: 50%;
         }
-
-        /* input:active{
-            background-color: yellow;
-        }
-        input:focus{
-            background-color: yellow;
-        } */
         input{
             border: none !important;
             background-color: rgb(211, 250, 233);
@@ -117,6 +116,23 @@
         input[type=number] {
           -moz-appearance: textfield;
         }
+        #new{
+          display: flex;
+        }
+        #new>input{
+          border-color: blue;
+          margin: 15px;
+          border-radius: 6px;
+        }
+        /* body{
+          background-image: url("rosen.png");
+          background-size: auto;
+          background-attachment: fixed;
+          background-repeat: repeat-y;
+        } */
+        input{
+          box-shadow: 5px 5px 3px #6e6a42;
+        }
     </style>
 </head>
 <body>
@@ -127,7 +143,10 @@
       <button type="button" onclick="myFunction()">OK</button>
     </div><br><br><br><br><br><br><br><br><br><br><br><br>
 
-    <div id="table"></div>
+    <div id="new">
+      <input type="text" placeholder="lisa nimi" id="newName">
+      <input type="button" value="Lisa mängija" onclick="newPlayer()">
+    </div>
 
     <script>
         var tableNumber = 100;
@@ -141,6 +160,16 @@
 
         var players = 0;
         var names = ['', 'Ergo', 'Erki', 'Kermo', 'Martin', 'Pille', 'Rauni', 'Rauno', 'Sven', 'Vitali'];
+
+        function newPlayer(){
+          var playerName = document.getElementById("newName").value;
+          console.log(playerName);
+          names.push(playerName);
+          console.log(names);
+          playerName = "";
+          document.getElementById("newName").value = "";
+        }
+
         function myFunction(){
             tableNumber += 1;
 
@@ -150,6 +179,8 @@
             var body = document.body,
             tbl  = document.createElement('table');
             tbl.style.width  = '100%';
+
+            document.getElementById('new').style.display = "none";
 
             for(var i = 0; i <= 6; i++){
                 var tr = tbl.insertRow();
@@ -187,7 +218,6 @@
                             }
 
                             inputNumber.addEventListener('click', function(evt){
-                              /* console.log("hello: " + inputNumber.id); */
 
                               // Enter klahvi kasutus
                               var input = document.getElementById(this.id);
@@ -218,25 +248,19 @@
             linebreak = document.createElement("br");
             body.appendChild(linebreak);
 
+            
+
             function myPopup(cellId){
-              /* console.log('Cell number is: ' + cellId); */
               let tableNumber = cellId.substring(0, 3);
               console.log(tableNumber);
-              /* console.log('Table number is: ' + tableNumber); */
               let columnNumber = cellId.substring(3, 4);
-              /* console.log('Column number is: ' + columnNumber); */
               let rowNumber = cellId.substring(4, 5);
-              /* console.log('Row number is: ' + rowNumber); */
               let outputNumber = tableNumber + columnNumber + '5';
-              /* console.log('Output number is: ' + outputNumber); */
-
               let row = parseInt(rowNumber);
-              /* console.log(row); */
 
               // 2 - 5 reale
               if(row < 6){
                 let currentThrow = document.getElementById(cellId).value;
-                /* console.log("Current throw is: " + currentThrow); */
               }
 
               let sumValue = 0;
@@ -248,7 +272,6 @@
                 if(!(isNaN(currentValue))){
                   sumValue += currentValue;
                 }
-                /* console.log("sum is " + sumValue); */
               }
               // Veeru punktisumma kuvatakse alumisel väljal
               document.getElementById(tableNumber + '' + columnNumber + '' + 6).innerHTML = sumValue.toString();
