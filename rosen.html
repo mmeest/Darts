@@ -150,6 +150,14 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
     </div>
 
     <script>
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+        const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+        if(vw >= vh){
+          document.body.style.backgroundSize = "cover";
+        }else{
+          document.body.style.backgroundSize = "contain";
+        }
+      
         var tableNumber = 100;
         var slider = document.getElementById("myRange");
         var output = document.getElementById("demo");
@@ -241,7 +249,6 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
                             td.id = tableNumber.toString() + '' + j.toString() + '' + i.toString();
                           }
                         }
-                        td.style.border = '1px solid black';
                 }
             }
             body.appendChild(tbl);        
