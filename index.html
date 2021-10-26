@@ -22,8 +22,7 @@
       body{
         background-color: rgb(105, 201, 178);
         background-image: url('darts.jpg');
-        /* background-repeat: no-repeat; */
-        background-size: contain; 
+        background-repeat: no-repeat;
         background-attachment: fixed;
         font-family: Arial, Helvetica, sans-serif;
       }
@@ -71,10 +70,10 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
           margin: 6px;
           font-size: 6vh;
           padding: 5px;
-          background-color: rgb(211, 250, 245);
+          background-color: rgb(211, 250, 245);          
         }
         table{          
-          border-collapse: separate;
+          border-collapse: separate;       
           border-spacing: 15px;          
         }
         tr:last-child>td{
@@ -115,7 +114,7 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
         }
         /* Firefox */
         input[type=number] {
-          -moz-appearance: textfield;
+          -moz-appearance: textfield;          
         }
         #new{
           display: flex;
@@ -125,12 +124,6 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
           margin: 15px;
           border-radius: 6px;
         }
-        /* body{
-          background-image: url("rosen.png");
-          background-size: auto;
-          background-attachment: fixed;
-          background-repeat: repeat-y;
-        } */
         input{
           box-shadow: 5px 5px 3px #6e6a42;
         }
@@ -148,9 +141,13 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
     </div><br><br><br><br><br><br><br><br><br><br><br><br>
 
     <div id="new">
-      <input type="text" placeholder="nimi" id="newName">
-      <input type="button" value="Lisa" onclick="newPlayer()">
+      <input type="text" placeholder="lisa nimi" id="newName">
+      <input type="button" value="Lisa mängija" onclick="newPlayer()">
     </div>
+
+    <!-- <div id="newTable">
+      <input type="button" value="Kordusmäng" onclick="repeat()" style.width="fit-content">
+    </div> -->
 
     <script>
         const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
@@ -160,8 +157,8 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
         }else{
           document.body.style.backgroundSize = "contain";
         }
-      
-      
+
+
         var tableNumber = 100;
         var slider = document.getElementById("myRange");
         var output = document.getElementById("demo");
@@ -244,7 +241,7 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
                                 if (event.keyCode === 13) {
                                 event.preventDefault();
                                 console.log("agergerge");
-                                myPopup(this.id);
+                                myPopup(this.id, players);
                                 }
                               });      
                           });
@@ -255,20 +252,38 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
                         }
                 }
             }
+            let btn  = document.createElement('button');
+            btn.innerHTML = 'Kordusmäng';
+            btn.onclick = 'myFunction()';
+            tbl.append.btn;
+
             body.appendChild(tbl);        
 
             linebreak = document.createElement("br");
-            body.appendChild(linebreak);
+            document.body.appendChild(linebreak);
 
-            
 
-            function myPopup(cellId){
+            function myPopup(cellId, players){
               let tableNumber = cellId.substring(0, 3);
               console.log(tableNumber);
               let columnNumber = cellId.substring(3, 4);
               let rowNumber = cellId.substring(4, 5);
               let outputNumber = tableNumber + columnNumber + '5';
               let row = parseInt(rowNumber);
+              let column = parseInt(columnNumber);
+              let table = parseInt(tableNumber);
+
+              // Hüppab järgmisele lahtrile numbri sisestamisel
+              if(column < players-1){
+                console.log("hello");
+                document.getElementById(tableNumber + (column + 1).toString() + rowNumber).click();
+                document.getElementById(tableNumber + (column + 1).toString() + rowNumber).focus();
+                console.log(tableNumber + (column + 1).toString() + rowNumber);
+              }
+              if(column == players-1 && row != 5){
+                document.getElementById(tableNumber + '0' + (row + 1).toString()).click();
+                document.getElementById(tableNumber + '0' + (row + 1).toString()).focus();
+              }
 
               // 2 - 5 reale
               if(row < 6){
