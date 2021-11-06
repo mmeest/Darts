@@ -1,23 +1,31 @@
 <!DOCTYPE html>
-  <!-- 
-    Slider mängijate arvu valimiseks                  +
-    Tabeli genereerimine vastavalt mängijate arvule   +
-    Tabeli päises mängijate nimede valik              +
-    Tabeli väljadele ID omandamine                    +
-    Tabeli väljadel klikkides numbrite sisestamine    +
-    Tabeli alumisel väljal veergude summa             +
-    Suurima punktisummaga lahter rohelise taustaga    +
-    Aktiivne tabeli lahter kollase taustaga           +
-    Viimasele reale ei saa sisestada numbreid         +
-    'Enter' klahvi kasutamine                         +
-    Uue kasutaja lisamine                             +
-  -->
 <html lang="en">
+  <script>
+    var names = ['', 'Ergo', 'Erki', 'Kermo', 'Martin', 'Pille', 'Rauni', 'Rauno', 'Sven', 'Vitali'];
+    var sequence = ['', '', '', '', '', '', '', ''];
+  </script>
+
+<!-- 
+  Slider mängijate arvu valimiseks                  +
+  Tabeli genereerimine vastavalt mängijate arvule   +
+  Tabeli päises mängijate nimede valik              +
+  Tabeli väljadele ID omandamine                    +
+  Tabeli väljadel klikkides numbrite sisestamine    +
+  Tabeli alumisel väljal veergude summa             +
+  Suurima punktisummaga lahter rohelise taustaga    +
+  Aktiivne tabeli lahter kollase taustaga           +
+  Viimasele reale ei saa sisestada numbreid         +
+  'Enter' klahvi kasutamine                         +
+  Uue kasutaja lisamine                             +
+  Väljade puhastamine                               +
+  Kordusmäng                                        +
+-->
+
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noolemäng 211026</title>
+    <title>Noolemäng</title>
     <style>
       body{
         background-color: rgb(105, 201, 178);
@@ -35,7 +43,6 @@
         left: 10%;
         position: fixed;
         z-index: 100;
-        /* background-color: rgb(138, 179, 63); */
         border-radius: 20px;
         border-style: solid;
         border-color: rgb(44, 42, 42);
@@ -92,9 +99,11 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
           background-color: rgb(234, 250, 192);
         }
         button{
-          width: 40px;
+          width: fit-content;
+          font-weight: bold;
           height: 40px;
-          border-radius: 50%;
+          padding: 3px 12px 3px 12px;
+          border-radius: 33%;
         }
         input{
             border: none !important;
@@ -114,12 +123,17 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
         }
         /* Firefox */
         input[type=number] {
-          -moz-appearance: textfield;          
+          -moz-appearance: textfield;     
+          /* background-image: url('rosen.png');   */  
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: cover;
+          background-size: contain;
         }
-        #new{
+        .new{
           display: flex;
         }
-        #new>input{
+        .new>input{
           border-color: blue;
           margin: 15px;
           border-radius: 6px;
@@ -130,6 +144,9 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
         tr:nth-child(1)>td{
           background-color: transparent;
         }
+        #replay{
+          display: none;
+        }
     </style>
 </head>
 <body>
@@ -137,17 +154,22 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
     <div id="fix"><br>
       <input type="range" min="1" max="8" value="3" class="slider" id="myRange" style="width: 100%;">
       <p>Mängijate arv: <span id="demo"></span></p>
-      <button type="button" onclick="myFunction()">OK</button>
+      <button type="button" onclick="zeroOut(sequence)">OK</button>
     </div><br><br><br><br><br><br><br><br><br><br><br><br>
 
-    <div id="new">
-      <input type="text" placeholder="lisa nimi" id="newName">
-      <input type="button" value="Lisa mängija" onclick="newPlayer()">
+    <div class="new" id="newplayer">
+      <input type="text" placeholder="Nimi" id="newName">
+      <input type="button" value="Lisa" onclick="newPlayer()">
     </div>
 
-    <!-- <div id="newTable">
-      <input type="button" value="Kordusmäng" onclick="repeat()" style.width="fit-content">
-    </div> -->
+    <div id="table">
+      <!-- siia lisatakse mängutabel -->
+    </div>
+
+    <div class="new" id="replay">
+      <input type="button" value="Tühjenda" onclick="clearFields(tableNumber)">
+      <input type="button" value="Kordus" onclick="newGame()">
+    </div>
 
     <script>
         const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
@@ -157,7 +179,6 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
         }else{
           document.body.style.backgroundSize = "cover";
         }
-
 
         var tableNumber = 100;
         var slider = document.getElementById("myRange");
@@ -169,28 +190,60 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
         }
 
         var players = 0;
-        var names = ['', 'Ago', 'Jane', 'Marii', 'Martin', 'Margus', 'Riina'];
 
         function newPlayer(){
           var playerName = document.getElementById("newName").value;
-          console.log(playerName);
           names.push(playerName);
-          console.log(names);
           playerName = "";
           document.getElementById("newName").value = "";
         }
 
-        function myFunction(){
+        // puhastame väljad
+        function clearFields(tblnr){
+          var fields = document.getElementsByClassName("inp" + tblnr.toString());
+
+          for(var y = 0; y < players; y++){
+            document.getElementById(tblnr.toString() + '' + y.toString() + '' + 6).innerHTML = '';
+          }
+
+          for(var x = 0; x < fields.length; x++){
+            fields[x].value = '';
+          }
+
+          for(var x = 0; x < players; x++){ 
+                document.getElementById(tableNumber + '' + x + '' + 6).style.backgroundColor = 'rgb(234, 250, 192)';
+          }
+
+        }         
+        
+        // kordusmängu loomine
+        function newGame(){
+          for(var pl = 0; pl < players; pl++){
+            var perfectValue = document.getElementById('mySelect' + tableNumber.toString() + pl.toString()).value;            
+            sequence[pl] = perfectValue;
+          }
+          myFunction(sequence);
+        }
+
+        function zeroOut(){
+          sequence = ['', '', '', '', '', '', '', ''];
+          myFunction(sequence);
+        }
+
+        // uue mängu loomine
+        function myFunction(sequence){
             tableNumber += 1;
 
             players = slider.value;
-            console.log(players);
 
             var body = document.body,
             tbl  = document.createElement('table');
             tbl.style.width  = '100%';
 
-            document.getElementById('new').style.display = "none";
+            document.getElementById('replay').style.display = 'flex';
+
+            // peidab lisanupud
+            document.getElementById('newplayer').style.display = 'none';
 
             for(var i = 0; i <= 6; i++){
                 var tr = tbl.insertRow();
@@ -201,16 +254,22 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
                           
                           //Valiku loomine ja lisamine
                           var selectList = document.createElement("select");
-                          selectList.id = "mySelect";
-                          td.appendChild(selectList);
-
+                          selectList.id = "mySelect" + tableNumber.toString() + j.toString();
+                          
                           //Nimede lisamine valikusse
                           for (var k = 0; k < names.length; k++) {
-                              var option = document.createElement("option");
-                              option.value = names[k];
-                              option.text = names[k];
-                              selectList.appendChild(option);
-                          }
+                            var option = document.createElement("option");
+                            option.value = names[k];
+                            option.text = names[k];
+                            selectList.appendChild(option);
+                          } 
+                          
+                          ///////////////////////////////
+                          selectList.value = sequence[j];
+                          ///////////////////////////////
+                          td.appendChild(selectList);
+
+                          
                         }else{
 
                           if(i < 6){
@@ -222,9 +281,14 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
                             inputNumber.id = tableNumber.toString() + '' + j.toString() + '' + i.toString();
                             inputNumber.onclick = "myPopup(id.this)";
                             td.appendChild(inputNumber);
+                            
+                            if(i < 6){
+                              inputNumber.className = 'inp' + tableNumber.toString();
+                            }
 
                             if(i == 6){
                               inputNumber.disabled="disabled";
+                              inputNumber.className = 'out' + tableNumber.toString();
                             }
 
                             inputNumber.addEventListener('click', function(evt){
@@ -235,12 +299,9 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
                               // Värvib klikitud välja tausta kollaseks
                               document.getElementById(this.id).style.backgroundColor = 'yellow';
 
-                              /* $("#myForm").submit(myPopup(this.id)); */
-
                               input.addEventListener("keyup", function(event) {
                                 if (event.keyCode === 13) {
                                 event.preventDefault();
-                                console.log("agergerge");
                                 myPopup(this.id, players);
                                 }
                               });      
@@ -250,22 +311,17 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
                             td.id = tableNumber.toString() + '' + j.toString() + '' + i.toString();
                           }
                         }
-                }
+                } 
             }
-            let btn  = document.createElement('button');
-            btn.innerHTML = 'Kordusmäng';
-            btn.onclick = 'myFunction()';
-            tbl.append.btn;
 
-            body.appendChild(tbl);        
+            /* body.appendChild(tbl);    */    
+            document.getElementById('table').appendChild(tbl);      
 
             linebreak = document.createElement("br");
             document.body.appendChild(linebreak);
 
-
             function myPopup(cellId, players){
               let tableNumber = cellId.substring(0, 3);
-              console.log(tableNumber);
               let columnNumber = cellId.substring(3, 4);
               let rowNumber = cellId.substring(4, 5);
               let outputNumber = tableNumber + columnNumber + '5';
@@ -275,10 +331,8 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
 
               // Hüppab järgmisele lahtrile numbri sisestamisel
               if(column < players-1){
-                console.log("hello");
                 document.getElementById(tableNumber + (column + 1).toString() + rowNumber).click();
                 document.getElementById(tableNumber + (column + 1).toString() + rowNumber).focus();
-                console.log(tableNumber + (column + 1).toString() + rowNumber);
               }
               if(column == players-1 && row != 5){
                 document.getElementById(tableNumber + '0' + (row + 1).toString()).click();
@@ -320,7 +374,9 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
                   document.getElementById(tableNumber + '' + x + '' + 6).style.backgroundColor = 'lightgreen';
                 }                
               }
+              
             }
+
         }
         </script>
 </body>
