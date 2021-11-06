@@ -175,9 +175,9 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
         const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
         const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
         if(vw >= vh){
-          document.body.style.backgroundSize = "cover";
-        }else{
           document.body.style.backgroundSize = "contain";
+        }else{
+          document.body.style.backgroundSize = "cover";
         }
 
         var tableNumber = 100;
