@@ -315,7 +315,12 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
             }
 
             /* body.appendChild(tbl);    */    
-            document.getElementById('table').appendChild(tbl);      
+            document.getElementById('table').appendChild(tbl);   
+          
+                      // fokuseerib esimese tabeli välja
+            document.getElementById(tableNumber + '01').style.backgroundColor = 'yellow';
+            document.getElementById(tableNumber + '01').click();
+            document.getElementById(tableNumber + '01').focus();
 
             linebreak = document.createElement("br");
             document.body.appendChild(linebreak);
@@ -328,6 +333,9 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
               let row = parseInt(rowNumber);
               let column = parseInt(columnNumber);
               let table = parseInt(tableNumber);
+              
+              // kõrvaldab lahtri taustapildi
+              document.getElementById(tableNumber + (column).toString() + rowNumber).style.backgroundImage = 'none';
 
               // Hüppab järgmisele lahtrile numbri sisestamisel
               if(column < players-1){
