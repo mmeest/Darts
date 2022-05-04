@@ -300,7 +300,7 @@ background: linear-gradient(90deg, rgba(5,27,42,1) 0%, rgba(76,132,219,1) 35%, r
                               document.getElementById(this.id).style.backgroundColor = 'yellow';
 
                               input.addEventListener("keyup", function(event) {
-                                if (event.keyCode === 13) {
+                                if (event.keyCode === 13 || evant.charCode === 13) {
                                 event.preventDefault();
                                 myPopup(this.id, players);
                                 }
